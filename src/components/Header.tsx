@@ -7,6 +7,7 @@ import {
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
 import { IconSun, IconMoon } from "@tabler/icons-react";
+import { IconToolsKitchen3 } from "@tabler/icons-react";
 
 interface HeaderComponentProps {
   opened: boolean;
@@ -33,6 +34,13 @@ export default function HeaderComponent({
             aria-label="Toggle navigation"
           />
         )}
+         <ActionIcon 
+         size="xl"
+          variant="filled"
+          color={isDark ? "yellow" : "blue"}><IconToolsKitchen3 /> </ActionIcon>
+
+
+
         <Text
           size="xl"
           fw={900}
