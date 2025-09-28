@@ -19,7 +19,7 @@ type AddFoodModalProps = {
   ) => void;
 };
 
-export default function AddFoodModal({}: AddFoodModalProps) {
+export default function AddFoodModal({opened, onClose, onAdd,}: AddFoodModalProps) {
   const [Name, setName] = useState<string>("");
   const [price, setPrice] = useState<number | string>(0);
   const [quantity, setQuantity] = useState<number | string>(0);
@@ -33,15 +33,19 @@ export default function AddFoodModal({}: AddFoodModalProps) {
     if (Name === "") {setnameError(true);
     ok = false;}
     let pricenum: number = Number(price);
-    if (price === "" || pricenum < 0) {setpriceError(true);
+    if (price === "" || pricenum <= 0) {setpriceError(true);
     ok = false;}
     let quantitynum: number = Number(quantity);
-    if (quantity === "" || quantitynum < 0) {setquantityError(true);
+    if (quantity === "" || quantitynum <= 0) {setquantityError(true);
     ok = false;}
-      if (category === "" ) {setCategoryError(true);
+      if (!category) {setCategoryError(true);
     ok = false;}
 
+    if (ok) {
+    onAdd(Name, price, quantity, category!);
+    onClose();
   }
+};
   const newAddFoodModalProps: AddFoodModalProps = {
     opened: false,
     onClose: function (): void {
@@ -59,23 +63,28 @@ export default function AddFoodModal({}: AddFoodModalProps) {
   console.log(val_number + 100); // 600.0
 
   return(
-      <Modal opened={opened} onClose={close} title="Authentication">
+      <Modal opened={opened} onClose={onClose} title="Add Food Item">
         {/* Modal content */}
          <Stack>                  
             {/* Name of item */}
             
               <div>
-                <label className="form-label">Name of item</label>
-                <TextInput      value={Name}      onChange={setName}/> 
+                
+                <TextInput      value={Name}      onChange={(event) => {setName(event.currentTarget.value); 
+                                                                      setnameError(false);}}/> 
                        
                 {nameError && ( <div className="invalid-feedback">Name of item is required</div>  )}
                 
-                <NumberInput  label="price" value={price} onChange={setPrice} />;
+                <NumberInput  label="price" value={price} onChange={(val) => {
+                                         setPrice(val ?? 0);
+                                          setpriceError(false);}} />;
                 
                 {priceError && (
                                   <div className="text-danger mt-1">Price per dish is required</div>
                                  )}
-                <NumberInput  label="quantity" value={price} onChange={setQuantity} />;
+                <NumberInput  label="quantity" value={quantity} onChange={(val) => {
+                                         setQuantity(val ?? 0);
+                                          setquantityError(false);}} />;
                  {quantityError && (
                                   <div className="text-danger mt-1">Number of dishes is required</div>
                                  )}                                      
